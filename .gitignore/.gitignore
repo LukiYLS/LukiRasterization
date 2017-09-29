@@ -1,0 +1,6 @@
+build/LukiRasterization/Debug/*
+build/LukiRasterization/Release/*
+build/LukiRasterization/LukiRasterization/Debug/*
+build/LukiRasterization/LukiRasterization/Release/*
+build/LukiRasterization/*.VC.db
+build/LukiRasterization/LukiRasterization.VC.VC.opendb
