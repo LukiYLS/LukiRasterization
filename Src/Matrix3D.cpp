@@ -20,65 +20,7 @@ namespace Core {
 		setColumn(0, xAxis);
 		setColumn(1, yAxis);
 		setColumn(2, zAxis);
-	}
-
-	bool Matrix3D::operator== (const Matrix3D& rhs) const
-	{
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-			{
-				if (m[row][col] != rhs.m[row][col])
-					return false;
-			}
-		}
-
-		return true;
-	}
-	//-----------------------------------------------------------------------
-	Matrix3D Matrix3D::operator+ (const Matrix3D& rhs) const
-	{
-		Matrix3D kSum;
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-			{
-				kSum.m[row][col] = m[row][col] +
-					rhs.m[row][col];
-			}
-		}
-		return kSum;
-	}
-	//-----------------------------------------------------------------------
-	Matrix3D Matrix3D::operator- (const Matrix3D& rhs) const
-	{
-		Matrix3D kDiff;
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-			{
-				kDiff.m[row][col] = m[row][col] -
-					rhs.m[row][col];
-			}
-		}
-		return kDiff;
-	}
-	//-----------------------------------------------------------------------
-	Matrix3D Matrix3D::operator* (const Matrix3D& rhs) const
-	{
-		Matrix3D kProd;
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-			{
-				kProd.m[row][col] =
-					m[row][0] * rhs.m[0][col] +
-					m[row][1] * rhs.m[1][col] +
-					m[row][2] * rhs.m[2][col];
-			}
-		}
-		return kProd;
-	}
+	}	
 	//-----------------------------------------------------------------------
 	Vector3D Matrix3D::operator* (const Vector3D& rhs) const
 	{
@@ -106,27 +48,7 @@ namespace Core {
 		return kProd;
 	}
 	//-----------------------------------------------------------------------
-	Matrix3D Matrix3D::operator- () const
-	{
-		Matrix3D kNeg;
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-				kNeg[row][col] = -m[row][col];
-		}
-		return kNeg;
-	}
-	//-----------------------------------------------------------------------
-	Matrix3D Matrix3D::operator* (double scale) const
-	{
-		Matrix3D kProd;
-		for (size_t row = 0; row < 3; row++)
-		{
-			for (size_t col = 0; col < 3; col++)
-				kProd[row][col] = scale*m[row][col];
-		}
-		return kProd;
-	}
+
 	//-----------------------------------------------------------------------
 	Matrix3D operator* (double scale, const Matrix3D& rhs)
 	{

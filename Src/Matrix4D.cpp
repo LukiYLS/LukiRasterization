@@ -69,7 +69,7 @@ namespace Core {
 		_m[15] = a33_;
 	}
 
-	bool Matrix4D::get_inverse(Matrix4D& mat4_) const
+	Matrix4D Matrix4D::getInverse()const
 	{
 		double a0 = _m[0] * _m[5] - _m[1] * _m[4];
 		double a1 = _m[0] * _m[6] - _m[2] * _m[4];
@@ -89,8 +89,9 @@ namespace Core {
 
 		if (fabs(det) < math_tolerance)
 		{
-			return false;
+			return Identity;
 		}
+		Matrix4D mat4_;
 		mat4_[0] = _m[5] * b5 - _m[6] * b4 + _m[7] * b3;
 		mat4_[1] = -_m[1] * b5 + _m[2] * b4 - _m[3] * b3;
 		mat4_[2] = _m[13] * a5 - _m[14] * a4 + _m[15] * a3;
@@ -111,15 +112,15 @@ namespace Core {
 		mat4_[14] = -_m[12] * a3 + _m[13] * a1 - _m[14] * a0;
 		mat4_[15] = _m[8] * a3 - _m[9] * a1 + _m[10] * a0;
 		mat4_ = mat4_*(1.0 / det);
-		return true;
+		return mat4_;
 	}	
 
-	const double* Matrix4D::get_matrix() const
+	const double* Matrix4D::getMatrix() const
 	{
 		return _m;
 	}
 
-	Matrix3D Matrix4D::get_matrix3() const
+	Matrix3D Matrix4D::getMatrix3() const
 	{
 		Matrix3D m3x3;
 		m3x3.m[0][0] = m[0][0];
@@ -208,7 +209,7 @@ namespace Core {
 		return det;
 	}
 
-	Matrix4D Matrix4D::get_transpose() const
+	Matrix4D Matrix4D::getTranspose() const
 	{
 		return Matrix4D(
 			_m[0], _m[4], _m[8], _m[12],
@@ -218,7 +219,7 @@ namespace Core {
 		);
 	}
 	
-	Matrix4D Matrix4D::makeTransform(const Vector3D& position, const Vector3D& scale, const Quaternion& orientation)
+	Matrix4D Matrix4D::makeTransformMatrix(const Vector3D& position, const Vector3D& scale, const Quaternion& orientation)
 	{
 		// Ordering:
 		//    1. Scale
@@ -234,9 +235,11 @@ namespace Core {
 
 		// No projection term
 		r.m[3][0] = 0; r.m[3][1] = 0; r.m[3][2] = 0; r.m[3][3] = 1;
+
+		return r;
 	}
 
-	Matrix4D Matrix4D::make_rotation_matrix(const Vector3D& axis, double angle_in_rad_)
+	Matrix4D Matrix4D::makeRotationMatrix(const Vector3D& axis, double angle_in_rad_)
 	{
 
 		double x = axis[0];
@@ -296,7 +299,7 @@ namespace Core {
 		return dst;
 	}
 
-	Matrix4D Matrix4D::make_translate_matrix(const Vector3D& trans_)
+	Matrix4D Matrix4D::makeTranslateMatrix(const Vector3D& trans_)
 	{
 		Matrix4D r;
 
@@ -308,7 +311,7 @@ namespace Core {
 		return r;
 	}
 
-	Matrix4D Matrix4D::make_scale_matrix(const Vector3D& scale_)
+	Matrix4D Matrix4D::makeScaleMatrix(const Vector3D& scale_)
 	{
 		Matrix4D r;
 		r.m[0][0] = scale_.x; r.m[0][1] = 0.0; r.m[0][2] = 0.0; r.m[0][3] = 0.0;
@@ -319,7 +322,7 @@ namespace Core {
 		return r;
 	}
 
-	Matrix4D Matrix4D::create_reflection(const Vector3D& normal_, double dist_to_origin_)
+	Matrix4D Matrix4D::createReflection(const Vector3D& normal_, double dist_to_origin_)
 	{
 		double k = -2.0f * dist_to_origin_;
 
@@ -337,7 +340,7 @@ namespace Core {
 		);
 	}
 
-	Matrix4D Matrix4D::make_view_matrix(const Vector3D& pos_, const Vector3D& target_, const Vector3D& up_)
+	Matrix4D Matrix4D::makeViewMatrix(const Vector3D& pos_, const Vector3D& target_, const Vector3D& up_)
 	{
 		Vector3D look = pos_ - target_;
 		look.normalize();
@@ -354,7 +357,7 @@ namespace Core {
 		);
 	}
 
-	Matrix4D Matrix4D::make_proj_matrix(double view_degree_rad_, double aspect_ratio_, double near_distance_, double far_distance_)
+	Matrix4D Matrix4D::makeProjectionMatrix(double view_degree_rad_, double aspect_ratio_, double near_distance_, double far_distance_)
 	{
 		double f_n = 1.0 / (far_distance_ - near_distance_);
 		double theta = view_degree_rad_ * 0.5;
@@ -370,7 +373,7 @@ namespace Core {
 		);
 	}
 
-	Matrix4D Matrix4D::make_ortho_matrix(double width_, double height_, double near_dist_, double far_dist_)
+	Matrix4D Matrix4D::makeOrthoMatrix(double width_, double height_, double near_dist_, double far_dist_)
 	{
 		double f_n = 1.0 / (far_dist_ - near_dist_);
 		return Matrix4D(
@@ -381,7 +384,7 @@ namespace Core {
 		);
 	}
 
-	Matrix4D Matrix4D::make_ortho_matrix(double left, double right, double bottom, double top, double n, double f)
+	Matrix4D Matrix4D::makeOrthoMatrix(double left, double right, double bottom, double top, double n, double f)
 	{
 		Matrix4D OP;
 

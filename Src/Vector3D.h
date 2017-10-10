@@ -14,66 +14,73 @@ namespace Core {
 		double x, y, z;
 	public:
 	
-		inline Vector3D();
+		Vector3D()
+			:x(0), y(0), z(0)
+		{
+
+		}		
+		Vector3D(const double& x_, const double& y_, const double& z_)
+			: x(x_), y(y_), z(z_)
+		{
+
+		}
 		Vector3D(const Vector4D& v4_);
-		Vector3D(const double& x_, const double& y_, const double& z_);
-		
 
 		~Vector3D();
 
 		void operator=(const Vector4D& vec);		
 
 	public:
-		inline explicit Vector3D(const int coord[3])
+		explicit Vector3D(const int coord[3])
 		{
 			x = (double)coord[0];
 			y = (double)coord[1];
 			z = (double)coord[2];
 		}
 
-		inline explicit Vector3D(double* const r)
+		explicit Vector3D(double* const r)
 			: x(r[0]), y(r[1]), z(r[2])
 		{
 		}
 
-		inline explicit Vector3D(const double scaler)
+		explicit Vector3D(const double scaler)
 			: x(scaler)
 			, y(scaler)
 			, z(scaler)
 		{
 		}
 
-		inline Vector2D xy() const
+		Vector2D xy() const
 		{
 			return Vector2D(x, y);
 		}
 		
-		inline void swap(Vector3D& other)
+		void swap(Vector3D& other)
 		{
 			std::swap(x, other.x);
 			std::swap(y, other.y);
 			std::swap(z, other.z);
 		}
 
-		inline double operator [] (const size_t i) const
+		double operator [] (const size_t i) const
 		{
 			return *(&x + i);
 		}
 
-		inline double& operator [] (const size_t i)
+		double& operator [] (const size_t i)
 		{
 			return *(&x + i);
 		}		
-		inline double* ptr()
+		double* ptr()
 		{
 			return &x;
 		}		
-		inline const double* ptr() const
+		const double* ptr() const
 		{
 			return &x;
 		}
 
-		inline Vector3D& operator = (const Vector3D& rhs)
+		Vector3D& operator = (const Vector3D& rhs)
 		{
 			x = rhs.x;
 			y = rhs.y;
@@ -82,7 +89,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator = (const double scale)
+		Vector3D& operator = (const double scale)
 		{
 			x = scale;
 			y = scale;
@@ -91,18 +98,18 @@ namespace Core {
 			return *this;
 		}
 
-		inline bool operator == (const Vector3D& rhs) const
+		bool operator == (const Vector3D& rhs) const
 		{
 			return (x == rhs.x && y == rhs.y && z == rhs.z);
 		}
 
-		inline bool operator != (const Vector3D& rhs) const
+		bool operator != (const Vector3D& rhs) const
 		{
 			return (x != rhs.x || y != rhs.y || z != rhs.z);
 		}
 
 		// arithmetic operations
-		inline Vector3D operator + (const Vector3D& rhs) const
+		Vector3D operator + (const Vector3D& rhs) const
 		{
 			return Vector3D(
 				x + rhs.x,
@@ -110,7 +117,7 @@ namespace Core {
 				z + rhs.z);
 		}
 
-		inline Vector3D operator - (const Vector3D& rhs) const
+		Vector3D operator - (const Vector3D& rhs) const
 		{
 			return Vector3D(
 				x - rhs.x,
@@ -118,7 +125,7 @@ namespace Core {
 				z - rhs.z);
 		}
 
-		inline Vector3D operator * (const double scale) const
+		Vector3D operator * (const double scale) const
 		{
 			return Vector3D(
 				x * scale,
@@ -126,7 +133,7 @@ namespace Core {
 				z * scale);
 		}
 
-		inline Vector3D operator * (const Vector3D& rhs) const
+		Vector3D operator * (const Vector3D& rhs) const
 		{
 			return Vector3D(
 				x * rhs.x,
@@ -134,7 +141,7 @@ namespace Core {
 				z * rhs.z);
 		}
 
-		inline Vector3D operator / (const double scale) const
+		Vector3D operator / (const double scale) const
 		{		
 
 			double fInv = 1.0f / scale;
@@ -145,7 +152,7 @@ namespace Core {
 				z * fInv);
 		}
 
-		inline Vector3D operator / (const Vector3D& rhs) const
+		Vector3D operator / (const Vector3D& rhs) const
 		{
 			return Vector3D(
 				x / rhs.x,
@@ -153,16 +160,17 @@ namespace Core {
 				z / rhs.z);
 		}
 
-		inline const Vector3D& operator + () const
+		const Vector3D& operator + () const
 		{
 			return *this;
 		}
 
-		inline Vector3D operator - () const
+		Vector3D operator - () const
 		{
 			return Vector3D(-x, -y, -z);
 		}
-		inline Vector3D& operator += (const Vector3D& rhs)
+
+		Vector3D& operator += (const Vector3D& rhs)
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -171,7 +179,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator += (const double scale)
+		Vector3D& operator += (const double scale)
 		{
 			x += scale;
 			y += scale;
@@ -179,7 +187,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator -= (const Vector3D& rhs)
+		Vector3D& operator -= (const Vector3D& rhs)
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -188,7 +196,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator -= (const double scale)
+		Vector3D& operator -= (const double scale)
 		{
 			x -= scale;
 			y -= scale;
@@ -196,7 +204,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator *= (const double scale)
+		Vector3D& operator *= (const double scale)
 		{
 			x *= scale;
 			y *= scale;
@@ -204,7 +212,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator *= (const Vector3D& rhs)
+		Vector3D& operator *= (const Vector3D& rhs)
 		{
 			x *= rhs.x;
 			y *= rhs.y;
@@ -213,7 +221,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator /= (const Vector3D& rhs)
+		Vector3D& operator /= (const Vector3D& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -222,7 +230,7 @@ namespace Core {
 			return *this;
 		}
 
-		inline Vector3D& operator /= (const double scale)
+		Vector3D& operator /= (const double scale)
 		{
 			//assert(fScalar != 0.0);
 
@@ -235,14 +243,14 @@ namespace Core {
 			return *this;
 		}
 
-		inline bool operator < (const Vector3D& rhs) const
+		bool operator < (const Vector3D& rhs) const
 		{
 			if (x < rhs.x && y < rhs.y && z < rhs.z)
 				return true;
 			return false;
 		}
 
-		inline bool operator > (const Vector3D& rhs) const
+		bool operator > (const Vector3D& rhs) const
 		{
 			if (x > rhs.x && y > rhs.y && z > rhs.z)
 				return true;
@@ -251,31 +259,31 @@ namespace Core {
 
 
 	public:
-		inline double length() const
+		double length() const
 		{
 			return sqrt(x * x + y * y + z * z);
 		}
 
-		inline double squaredLength() const
+		double squaredLength() const
 		{
 			return x * x + y * y + z * z;
 		}
 
-		inline double distance(const Vector3D& rhs) const
+		double distance(const Vector3D& rhs) const
 		{
 			return (*this - rhs).length();
 		}
 
-		inline double squaredDistance(const Vector3D& rhs) const
+		double squaredDistance(const Vector3D& rhs) const
 		{
 			return (*this - rhs).squaredLength();
 		}
 
-		inline double dot(const Vector3D& vec) const
+		double dot(const Vector3D& vec) const
 		{
 			return x * vec.x + y * vec.y + z * vec.z;
 		}
-		inline double normalize()
+		double normalize()
 		{
 			double length = sqrt(x * x + y * y + z * z);			
 			if (length > double(0.0f))
@@ -288,7 +296,7 @@ namespace Core {
 
 			return length;
 		}
-		inline Vector3D cross(const Vector3D& rhs) const
+		Vector3D cross(const Vector3D& rhs) const
 		{
 			return Vector3D(
 				y * rhs.z - z * rhs.y,
@@ -296,7 +304,7 @@ namespace Core {
 				x * rhs.y - y * rhs.x);
 		}
 		
-		inline Vector3D midPoint(const Vector3D& vec) const
+		Vector3D midPoint(const Vector3D& vec) const
 		{
 			return Vector3D(
 				(x + vec.x) * 0.5f,
@@ -304,27 +312,27 @@ namespace Core {
 				(z + vec.z) * 0.5f);
 		}
 		
-		inline void makeFloor(const Vector3D& cmp)
+		void makeFloor(const Vector3D& cmp)
 		{
 			if (cmp.x < x) x = cmp.x;
 			if (cmp.y < y) y = cmp.y;
 			if (cmp.z < z) z = cmp.z;
 		}
 		
-		inline void makeCeil(const Vector3D& cmp)
+		void makeCeil(const Vector3D& cmp)
 		{
 			if (cmp.x > x) x = cmp.x;
 			if (cmp.y > y) y = cmp.y;
 			if (cmp.z > z) z = cmp.z;
 		}
 
-		inline Vector3D reflect(const Vector3D& normal) const
+		Vector3D reflect(const Vector3D& normal) const
 		{
 			return Vector3D(*this - (2 * this->dot(normal) * normal));
 		}
 
 	public:
-		 inline friend Vector3D operator * ( const double scale, const Vector3D& rhs )
+		friend Vector3D operator * ( const double scale, const Vector3D& rhs )
         {
             return Vector3D(
 				scale * rhs.x,
@@ -332,7 +340,7 @@ namespace Core {
 				scale * rhs.z);
         }
 
-        inline friend Vector3D operator / ( const double fScalar, const Vector3D& rkVector )
+        friend Vector3D operator / ( const double fScalar, const Vector3D& rkVector )
         {
             return Vector3D(
                 fScalar / rkVector.x,
@@ -340,7 +348,7 @@ namespace Core {
                 fScalar / rkVector.z);
         }
 
-        inline friend Vector3D operator + (const Vector3D& lhs, const double rhs)
+        friend Vector3D operator + (const Vector3D& lhs, const double rhs)
         {
             return Vector3D(
                 lhs.x + rhs,
@@ -348,7 +356,7 @@ namespace Core {
                 lhs.z + rhs);
         }
 
-        inline friend Vector3D operator + (const double lhs, const Vector3D& rhs)
+        friend Vector3D operator + (const double lhs, const Vector3D& rhs)
         {
             return Vector3D(
                 lhs + rhs.x,
@@ -356,7 +364,7 @@ namespace Core {
                 lhs + rhs.z);
         }
 
-        inline friend Vector3D operator - (const Vector3D& lhs, const double rhs)
+        friend Vector3D operator - (const Vector3D& lhs, const double rhs)
         {
             return Vector3D(
                 lhs.x - rhs,
@@ -364,7 +372,7 @@ namespace Core {
                 lhs.z - rhs);
         }
 
-        inline friend Vector3D operator - (const double lhs, const Vector3D& rhs)
+        friend Vector3D operator - (const double lhs, const Vector3D& rhs)
         {
             return Vector3D(
                 lhs - rhs.x,

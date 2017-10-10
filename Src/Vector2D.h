@@ -16,24 +16,24 @@ namespace Core {
 		}
 		~Vector2D() = default;
 	public:		
-		inline double operator*(const Vector2D& vec) const {
+		double operator*(const Vector2D& vec) const {
 			return x * vec.x + y * vec.y;
 		}
-		inline Vector2D operator*(double scaler) const {
+		Vector2D operator*(double scaler) const {
 			return Vector2D(scaler*x, scaler*y);
 		}
 
-		inline Vector2D operator+ (const Vector2D& vec) const {
+		Vector2D operator+ (const Vector2D& vec) const {
 			return Vector2D(x + vec.x, y + vec.y);
 		}
-		inline Vector2D operator- (const Vector2D& vec) const {
+		Vector2D operator- (const Vector2D& vec) const {
 			return Vector2D(x - vec.x, y - vec.y);
 		}
-		inline void operator+= (const Vector2D& vec) {
+		void operator+= (const Vector2D& vec) {
 			x += vec.x;
 			y += vec.y;
 		}
-		inline void operator-= (const Vector2D& vec) {
+		void operator-= (const Vector2D& vec) {
 			x -= vec.x;
 			y -= vec.y;
 		}

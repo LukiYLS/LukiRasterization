@@ -3,122 +3,155 @@
 namespace Core {
 
 
-
-	void DrawHelper::drawLineSB(Device& device, Vertex p1, Vertex p2)
+	//This time the vertex postion is already the screen coordinates
+	void DrawHelper::drawLineSB(Device& device, Vertex v1, Vertex v2)
 	{
-		Vector3D pos1 = p1.position;
-		Vector3D pos2 = p2.position;
-		double dx = pos2.x - pos1.x;
-		double dy = pos2.y - pos1.y;
+		Vector3D pos1 = v1.position;
+		Vector3D pos2 = v2.position;
+		int dx = pos2.x - pos1.x;
+		int dy = pos2.y - pos1.y;
 
-		double k = dy / dx;
-		for (double i = pos1.x, j = pos1.y; i <= pos1.x; i++)
+		int k = (int)(dy / dx);
+		for (int i = (int)pos1.x, j = (int)pos1.y; i <= (int)pos2.x; i++)
 		{
 			Vector3D color;
-			if (p1.color != p2.color)
-				color = Vector3D::lerp(p1.color, p2.color, (i - pos1.x) / dx);
+			if (v1.color != v2.color)
+				color = Vector3D::lerp(v1.color, v2.color, (i - pos1.x) / dx);
 			else
-				color = p1.color;
-			device.setPixel((int)i, (int)j, color);
+				color = v1.color;
+			device.setPixel(i, j, color);
 			j += k;
 		}
 	}
-	void DrawHelper::drawLineBSH(Device& device, Vertex p1, Vertex p2)
+	void DrawHelper::drawLineBSH(Device& device, Vertex v1, Vertex v2)
 	{
-		Vector3D pos1 = p1.position;
-		Vector3D pos2 = p2.position;
-		double dx = abs(pos2.x - pos1.x);		
-		double dy = abs(pos2.y - pos1.y);
+		Vector3D pos1 = v1.position;
+		Vector3D pos2 = v2.position;
+		int dx = (int)abs(pos2.x - pos1.x);		
+		int dy = (int)abs(pos2.y - pos1.y);
 		int sx = pos1.x < pos2.x ? 1 : -1;
 		int sy = pos1.y < pos2.y ? 1 : -1;
 
-		double x = pos1.x;
-		double y = pos1.y;
+		int x = (int)pos1.x;
+		int y = (int)pos1.y;
+	
 
-		int err = (dx > dy ? dx : -dy) / 2, e2;//误差积累
+		int deltaX = 2 * dx;
+		int deltaY = 2 * dy;
 
-		for (;;) {
-			Vector3D color;
-			if (p1.color != p2.color)
-				color = Vector3D::lerp(p1.color, p2.color, (x - pos1.x) / dx);
-			else
-				color = p1.color;
-			device.setPixel((int)x, (int)y, color);
-			if (x == pos2.x && y == pos2.y) break;
-			e2 = err;
-			if (e2 > -dx) { err -= dy; x += sx; }
-			if (e2 < dy) { err += dx; y += sy; }
-		}
-	}
-	void DrawHelper::drawTriangleLine(Device& device, Vertex p1, Vertex p2, Vertex p3)
-	{
-		drawLineBSH(device, p1, p2);
-		drawLineBSH(device, p1, p3);
-		drawLineBSH(device, p2, p3);
-	}
-
-	void DrawHelper::drawTriangleFill(Device& device, Vertex p1, Vertex p2, Vertex p3)
-	{
-		//p1,p2,p3根据y值排序
-		if (p1.position.y > p2.position.y)
+		if (dx > dy)
 		{
-			Vertex temp = p1;
-			p1 = p2;
-			p2 = temp;
-		}
-		if (p1.position.y > p3.position.y)
-		{
-			Vertex temp = p1;
-			p1 = p3;
-			p3 = temp;
-		}
-		if (p2.position.y > p3.position.y)
-		{
-			Vertex temp = p2;
-			p2 = p3;
-			p3 = temp;
-		}
-
-		if ((p1.position.y == p2.position.y == p3.position.y) || (p1.position.x == p2.position.x == p3.position.x))return;
-
-		if ((p1.position.y == p2.position.y) || (p2.position.y == p3.position.y))//不需要拆分
-		{
-			drawTriangleImmediate(device, p1, p2, p3);
+			int error = deltaY - dx;
+			for (int i = 0; i <= dx; ++i)
+			{
+				Vector3D color;
+				if (v1.color != v2.color)
+					color = Vector3D::lerp(v1.color, v2.color, (x - pos1.x) / dx);
+				else
+					color = v1.color;
+				if (x >= 0 && x < device.width() && y >= 0 && y < device.height())
+					device.setPixel(x, y, color);
+				if (error >= 0)
+				{
+					error -= deltaX;
+					y += sy;
+				}
+				error += deltaY;
+				x += sx;
+			}
 		}
 		else
 		{
-			double k = (p3.position.x - p1.position.x) / (p3.position.y - p1.position.y);
-			double xmid = k*(p2.position.y - p1.position.y) + p1.position.x;
-			Vertex mid = Vertex::lerp(p1, p3, (p2.position.y - p1.position.y) / (p3.position.y - p1.position.y));
+			int error = deltaX - dy;
+			for (int i = 0; i <= dy; i++)
+			{
+				Vector3D color;
+				if (v1.color != v2.color)
+					color = Vector3D::lerp(v1.color, v2.color, (y - pos1.y) / dy);
+				else
+					color = v1.color;
+				if (x >= 0 && x < device.width() && y >= 0 && y < device.height())
+					device.setPixel(x, y, color);				
+				if (error >= 0)
+				{
+					error -= deltaY;
+					x += sx;
+				}
+				error += deltaX;
+				y += sy;
+			}
+		}
+		
+	}
+	void DrawHelper::drawTriangleLine(Device& device, Vertex v1, Vertex v2, Vertex v3)
+	{
+		drawLineBSH(device, v1, v2);
+		drawLineBSH(device, v1, v3);
+		drawLineBSH(device, v2, v3);
+	}
+
+	void DrawHelper::drawTriangleFill(Device& device, Vertex v1, Vertex v2, Vertex v3)
+	{
+		//p1,p2,p3根据y值排序
+		if (v1.position.y > v2.position.y)
+		{
+			Vertex temp = v1;
+			v1 = v2;
+			v2 = temp;
+		}
+		if (v1.position.y > v3.position.y)
+		{
+			Vertex temp = v1;
+			v1 = v3;
+			v3 = temp;
+		}
+		if (v2.position.y > v3.position.y)
+		{
+			Vertex temp = v2;
+			v2 = v3;
+			v3 = temp;
+		}
+
+		if ((v1.position.y == v2.position.y == v3.position.y) || (v1.position.x == v2.position.x == v3.position.x))return;
+
+		if (((int)v1.position.y == (int)v2.position.y) || ((int)v2.position.y == (int)v3.position.y))//不需要拆分
+		{
+			drawTriangleImmediate(device, v1, v2, v3);
+		}
+		else
+		{
+			float k = (v3.position.x - v1.position.x) / (v3.position.y - v1.position.y);
+			float xmid = k*(v2.position.y - v1.position.y) + v1.position.x;
+			Vertex mid = Vertex::lerp(v1, v3, (v2.position.y - v1.position.y) / (v3.position.y - v1.position.y));
 			mid.position.x = xmid;
-			mid.position.y = p2.position.y;
-			drawTriangleImmediate(device, p1, p2, mid);//top
-			drawTriangleImmediate(device, p2, mid, p3);//bottom
+			mid.position.y = v2.position.y;
+			drawTriangleImmediate(device, v1, v2, mid);//top
+			drawTriangleImmediate(device, v2, mid, v3);//bottom
 		}
 
 	}
-	void DrawHelper::drawTriangleImmediate(Device& device, Vertex p1, Vertex p2, Vertex p3)
+	void DrawHelper::drawTriangleImmediate(Device& device, Vertex v1, Vertex v2, Vertex v3)
 	{
-		Vector3D pos1 = p1.position;
-		Vector3D pos2 = p2.position;
-		Vector3D pos3 = p3.position;
-		int dy = 0;
-		for (int y = p1.position.y; y <= p3.position.y; y++,dy++)
+		Vector3D pos1 = v1.position;
+		Vector3D pos2 = v2.position;
+		Vector3D pos3 = v3.position;
+		float dy = 0;
+		for (float y = v1.position.y; y <= v3.position.y; y++,dy++)
 		{
 			if (y >= 0 && y <= device.width())
 			{
-				float scale = dy / (p3.position.y - p1.position.y);//插值出起始点和终止点
+				float scale = dy / (v3.position.y - v1.position.y);//
 				Vertex start, end;
-				if (p1.position.y == p2.position.y)//top
+				if ((int)v1.position.y == (int)v2.position.y)//top
 				{
-					start = Vertex::lerp(p1, p3, scale);
-					end = Vertex::lerp(p2, p3, scale);
+					start = Vertex::lerp(v1, v3, scale);
+					end = Vertex::lerp(v2, v3, scale);
 					//Vector3D startcolor = Vector3D::lerp(p1.color, p2.color, scale);
 				}
 				else
 				{
-					start = Vertex::lerp(p1, p2, scale);
-					end = Vertex::lerp(p1, p3, scale);
+					start = Vertex::lerp(v1, v2, scale);
+					end = Vertex::lerp(v1, v3, scale);
 				}
 				
 				if (start.position.x > end.position.x)
@@ -127,10 +160,23 @@ namespace Core {
 					start = end;
 					end = temp;
 				}
-				for (int x = start.position.x; x <= end.position.x; x++)
+				for (float x = start.position.x; x <= end.position.x; x++)
 				{
-					Vector3D color = Vector3D::lerp(start.color, end.color, (x - start.position.x) / (end.position.x - end.position.x));
-					device.setPixel(x, y, color);
+					//depth test
+					float factor = 0;
+					if (end.position.x - start.position.x > 0.0)						
+						factor = (x - start.position.x) / (end.position.x - start.position.x);
+					Vertex v = Vertex::lerp(start, end, factor);
+					float one_divide_z = v.one_divide_z;
+					float oldZ = device.getZDepth((int)x, (int)y);
+					if (oldZ == 0.0 || one_divide_z >= oldZ) {
+						device.setZDepth((int)x, (int)y, one_divide_z);	
+						float w = 1 / one_divide_z;
+						v.unpPerspectiveCorrection(w);
+						if (x >= 0 && x < device.width() && y >= 0 && y < device.height())
+							device.setPixel((int)x, (int)y, v.color);
+					}
+					
 				}
 			}
 		}

@@ -21,7 +21,11 @@ namespace Core {
 		void setPosition(const Vector3D& pos) { _position = pos; }
 
 		void setDirection(float x, float y, float z) { setDirection(Vector3D(x, y, z)); }
-		void setDirection(const Vector3D& vec);
+		void setDirection(const Vector3D& vec) {
+			Quaternion quat;
+			quat.fromAxes(_orientation * Vector3D(1, 0, 0), _orientation * Vector3D(0, 1, 0), vec);
+			_orientation = quat;
+		}
 		Vector3D getDirection(void) const { return _orientation * Vector3D(0, 0, 1); }
 		Vector3D getUp(void) const { return _orientation * Vector3D(0, 1, 0); }
 		Vector3D getRight(void) const { return _orientation * Vector3D(1, 0, 0); }
@@ -46,8 +50,12 @@ namespace Core {
 		void pitch(float angle) { rotate(angle, _orientation*Vector3D(1, 0, 0)); }
 		void roll(float angle) { rotate(angle, _orientation*Vector3D(0, 0, 1)); }
 
-		Matrix4D getViewMatrix()const { return Matrix4D::makeTransform(_position,Vector3D(1.0), _orientation); }
+		Matrix4D getViewMatrix()const { return Matrix4D::makeTransformMatrix(_position,Vector3D(1.0), _orientation); }
+
+
 		Matrix4D getProjectionMatrix() { return Matrix4D::Identity; }
+		Matrix4D PerspectiveCamera(float fovy, float aspect, float zNear, float zFar);
+		
 		Matrix4D getScreenMatrix() {
 			return Matrix4D(
 				_view_port->width() / 2, 0, 0, _view_port->x() + _view_port->width() / 2,

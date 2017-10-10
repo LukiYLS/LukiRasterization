@@ -5,6 +5,10 @@
 #include <iostream>
 #include "Device.h"
 #include "DrawHelper.h"
+#include "Camera.h"
+#include "Quaternion.h"
+#include "GeometryCreator.h"
+#include "RenderObject.h"
 using namespace std;
 using namespace Core;
 
@@ -16,6 +20,8 @@ int						g_width = 800;			//´°¿Ú´óÐ¡
 int						g_height = 600;
 
 Device* dv = new Device(g_width, g_height);
+Camera* camera = new Camera(Vector3D(0.0, 0.0, -5.0));
+//camera->setDirection(0.0, 0.0, 1.0);
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -65,13 +71,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			DispatchMessage(&msg);
 		}
 		else
-		{
-			//g_pBoxDemo->Update(0.f);
-			//g_pBoxDemo->Render();
+		{			
 			dv->clearBuffer(Vector3D(1.0, 1.0, 1.0));
 //			DrawHelper::drawTriangleLine(*dv, Point2(20, 20), Point2(800, 50), Point2(50, 500), Vector3D(0.0, 1.0, 0.0));
 //			DrawHelper::drawTriangleFill(*dv, Point2(20, 20), Point2(800, 50), Point2(50, 500) , Vector3D(1.0, 0.0, 0.0));
-			
+			Vertex v1, v2, v3;
+			v1.position = Vector3D(400.0, 100.0, 0.0); v1.color = Vector3D(1.0, 0.0, 0.0);
+			v2.position = Vector3D(50.0, 500.0, 0.0); v2.color = Vector3D(0.0, 1.0, 0.0);
+			v3.position = Vector3D(700.0, 550.0, 0.0); v3.color = Vector3D(0.0, 0.0, 1.0);
+			RenderObject* box = GeometryCreator::createBox(2, 2, 2);
+			ViewPort* vP = new ViewPort(0, 0, g_width, g_height);
+			camera->setViewPort((ViewPort::ptr)vP);
+
+			box->setCamera(camera);
+			box->draw(*dv);
+			//DrawHelper::drawTriangleFill(*dv, v1, v2, v3);
 			InvalidateRect(g_hWnd, nullptr, true);
 			UpdateWindow(g_hWnd);
 		}

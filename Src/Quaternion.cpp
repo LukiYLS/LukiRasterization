@@ -70,11 +70,6 @@ namespace Core {
 	}
 	void Quaternion::fromAngleAxis(const double& angle, const Vector3D& axis)
 	{
-		// assert:  axis[] is unit length
-		//
-		// The quaternion representing the rotation is
-		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
-
 		double fHalfAngle(0.5*angle);
 		double fSin =sin(fHalfAngle);
 		w = cos(fHalfAngle);
@@ -82,6 +77,7 @@ namespace Core {
 		y = fSin*axis.y;
 		z = fSin*axis.z;
 	}
+
 	//-----------------------------------------------------------------------
 	float InvSqrt(float x)
 	{

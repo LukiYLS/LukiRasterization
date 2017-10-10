@@ -15,25 +15,25 @@ namespace Core {
 	public:
 		static const Matrix4D Zero;
 		static const Matrix4D Identity;
-		inline Matrix4D(const Matrix3D& m3x3)
+		Matrix4D(const Matrix3D& m3x3)
 		{
 			operator=(Identity);
 			operator=(m3x3);
 		}
-		inline double& operator[] (int index_) {
+		double& operator[] (int index_) {
 			return _m[index_];
 		}
-		inline const double& operator[] (int index_) const {
+		const double& operator[] (int index_) const {
 			return _m[index_];
 		}
-		inline double& operator() (int row_, int col_) {
+		double& operator() (int row_, int col_) {
 			return _m[col_ * 4 + row_];
 		}
-		inline const double& operator() (int row_, int col_) const {
+		const double& operator() (int row_, int col_) const {
 			return _m[col_ * 4 + row_];
 		}
 
-		inline Matrix4D operator*(double scalar_) const {
+		Matrix4D operator*(double scalar_) const {
 			return Matrix4D(
 				scalar_*_m[0],
 				scalar_*_m[1],
@@ -53,7 +53,7 @@ namespace Core {
 				scalar_*_m[15]
 			);
 		}
-		inline Matrix4D operator + (const Matrix4D &m2) const
+		Matrix4D operator + (const Matrix4D &m2) const
 		{
 			Matrix4D r;
 
@@ -80,7 +80,7 @@ namespace Core {
 			return r;
 		}
 		
-		inline Matrix4D operator - (const Matrix4D &m2) const
+		Matrix4D operator - (const Matrix4D &m2) const
 		{
 			Matrix4D r;
 			r.m[0][0] = m[0][0] - m2.m[0][0];
@@ -106,7 +106,7 @@ namespace Core {
 			return r;
 		}
 	
-		inline bool operator == (const Matrix4D& m2) const
+		bool operator == (const Matrix4D& m2) const
 		{
 			if (
 				m[0][0] != m2.m[0][0] || m[0][1] != m2.m[0][1] || m[0][2] != m2.m[0][2] || m[0][3] != m2.m[0][3] ||
@@ -116,29 +116,29 @@ namespace Core {
 				return false;
 			return true;
 		}
-		inline void operator = (const Matrix3D& mat3);		
-		inline Vector4D operator*(const Vector4D& vec_) const;		
-		inline Vector3D operator*(const Vector3D& vec_) const;			
-		inline Matrix4D operator*(const Matrix4D& mat4_) const;
+		void operator = (const Matrix3D& mat3);		
+		Vector4D operator*(const Vector4D& vec_) const;		
+		Vector3D operator*(const Vector3D& vec_) const;			
+		Matrix4D operator*(const Matrix4D& mat4_) const;
 			
 
 	public:
-		inline Matrix4D     get_transpose(void) const;
-		bool                get_inverse(Matrix4D& mat4_) const;
-		inline double       determinant() const;		
-		inline const double* Matrix4D::get_matrix() const;	
-		inline Matrix3D     get_matrix3() const ;
+		Matrix4D     getTranspose(void) const;
+		Matrix4D     getInverse() const;
+		double       determinant() const;		
+		const double* Matrix4D::getMatrix() const;	
+		Matrix3D     getMatrix3() const ;
 
 	public:		
-		static Matrix4D makeTransform(const Vector3D& position, const Vector3D& scale, const Quaternion& orientation);		
-		static Matrix4D make_translate_matrix(const Vector3D& trans_);
-		static Matrix4D make_scale_matrix(const Vector3D& scale_);
-		static Matrix4D make_rotation_matrix(const Vector3D& axis, double angle_in_rad_);
-		static Matrix4D create_reflection(const Vector3D& normal_, double dist_to_origin_);
-		static Matrix4D make_view_matrix(const Vector3D& pos_, const Vector3D& target_, const Vector3D& up_);
-		static Matrix4D make_proj_matrix(double view_degree_rad_, double aspect_ratio_, double near_distance_, double far_distance_);
-		static Matrix4D make_ortho_matrix(double width_, double height_, double near_dist_, double far_dist_);
-		static Matrix4D make_ortho_matrix(double left, double right, double bottom, double top, double n, double f);		
+		static Matrix4D makeTransformMatrix(const Vector3D& position, const Vector3D& scale, const Quaternion& orientation);		
+		static Matrix4D makeTranslateMatrix(const Vector3D& trans_);
+		static Matrix4D makeScaleMatrix(const Vector3D& scale_);
+		static Matrix4D makeRotationMatrix(const Vector3D& axis, double angle_in_rad_);
+		static Matrix4D createReflection(const Vector3D& normal_, double dist_to_origin_);
+		static Matrix4D makeViewMatrix(const Vector3D& pos_, const Vector3D& target_, const Vector3D& up_);
+		static Matrix4D makeProjectionMatrix(double view_degree_rad_, double aspect_ratio_, double near_distance_, double far_distance_);
+		static Matrix4D makeOrthoMatrix(double width_, double height_, double near_dist_, double far_dist_);
+		static Matrix4D makeOrthoMatrix(double left, double right, double bottom, double top, double n, double f);		
 	protected:
 		union {
 			double m[4][4];

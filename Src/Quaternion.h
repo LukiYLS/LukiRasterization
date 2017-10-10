@@ -2,30 +2,31 @@
 
 namespace Core {
 	class Vector3D;
-	class Matrix4D;
+	class Matrix3D;
 	class Quaternion {
 	public:
 		double x, y, z, w;
 	public:		
-		inline Quaternion()
+		Quaternion()
 			: x(0), y(0), z(0), w(1)
 		{
 		}		
-		inline Quaternion(double x_, double y_, double z_, double w_)
+		Quaternion(double x_, double y_, double z_, double w_)
 			: x(x_), y(y_), z(z_), w(w_)
 		{
 		}	
-		inline double operator [] (const size_t i) const
+		double operator [] (const size_t i) const
 		{
 			return *(&x + i);
 		}		
-		inline double& operator [] (const size_t i)
+		double& operator [] (const size_t i)
 		{
 			return *(&x + i);
 		}
 		
 		void fromRotationMatrix(const Matrix3D& kRot);
-		void toRotationMatrix(Matrix3D& kRot) const;		
+		void toRotationMatrix(Matrix3D& kRot) const;	
+
 		void fromAngleAxis(const double& rfAngle, const Vector3D& rkAxis);
 		void toAngleAxis(double& rfAngle, Vector3D& rkAxis) const;
 		
@@ -35,11 +36,10 @@ namespace Core {
 		void toAxes(Vector3D* akAxis) const;
 		void toAxes(Vector3D& xAxis, Vector3D& yAxis, Vector3D& zAxis) const;
 		
-		Vector3D xAxis(void) const;
-		
-		Vector3D yAxis(void) const;
-		
+		Vector3D xAxis(void) const;		
+		Vector3D yAxis(void) const;		
 		Vector3D zAxis(void) const;
+
 		Quaternion operator+ (const Quaternion& rkQ) const;
 		Quaternion operator- (const Quaternion& rkQ) const;
 		Quaternion operator* (const Quaternion& rkQ) const;
@@ -49,12 +49,12 @@ namespace Core {
 		}
 		Vector3D operator* (const Vector3D& vec) const;
 
-		inline bool operator== (const Quaternion& rhs) const
+		bool operator== (const Quaternion& rhs) const
 		{
 			return (rhs.x == x) && (rhs.y == y) &&
 				(rhs.z == z) && (rhs.w == w);
 		}
-		inline bool operator!= (const Quaternion& rhs) const
+		bool operator!= (const Quaternion& rhs) const
 		{
 			return !operator==(rhs);
 		}

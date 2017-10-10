@@ -48,7 +48,7 @@ namespace Core {
 		}
 
 	public:
-		Vector3D Sample(const float u, const float v);
+		Vector3D sample(const Vector2D& tex);
 	public:
 		UINT m_width;
 		UINT m_height;
